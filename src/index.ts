@@ -7,19 +7,22 @@ var ohm = require('ohm-js');
 var contents = fs.readFileSync('./src/Odyssey.ohm');
 var grammar = ohm.grammar(contents);
 
-class ASTNode {}
-class Identifier extends ASTNode {
+class ASTNode {
+}
+
+export class Identifier extends ASTNode {
   constructor(public value: string) {
     super()
   }
 }
-class IntegerLiteral extends ASTNode {
+
+export class IntegerLiteral extends ASTNode {
   constructor(public value: number) {
     super()
   }
 }
 
-type Op = '+' | '-' | '*'
+type Op = '+' | '-' | '*' | '/'
 class BinaryExpression extends ASTNode {
   constructor(
     public op: Op,
@@ -30,10 +33,20 @@ class BinaryExpression extends ASTNode {
   }
 }
 
+export class AssignmentExpression extends ASTNode {
+  constructor(
+    public id: Identifier,
+    public e: ASTNode,
+  ) {
+    super()
+  }
+}
+
 type Node = {
   sourceString: string
   derive: () => string
-  tree: () => ASTNode
+  tree: () => any 
+  // (Identifier | IntegerLiteral | BinaryExpression | AssignmentExpression)
   eval: () => any
   children: Node[]
 }
@@ -41,7 +54,6 @@ type Node = {
 const semantics = grammar.createSemantics()
 
 semantics.addOperation('tree', {
-  // Program: (stmts: Node) => n
   ident: (head: Node, rest: Node) => new Identifier(
     [head.sourceString, rest.sourceString].join('')
   ),
@@ -56,6 +68,12 @@ semantics.addOperation('tree', {
 
   MulExp_times: (left: Node, _tm: any, right: Node): BinaryExpression =>
     new BinaryExpression('*', left.tree(), right.tree()),
+
+  MulExp_div: (left: Node, _tm: any, right: Node): BinaryExpression =>
+    new BinaryExpression('/', left.tree(), right.tree()),
+
+  Assignment: (id: Node, _eq: any, e: Node): AssignmentExpression =>
+    new AssignmentExpression(id.tree(), e.tree()),
 });
 
 semantics.addOperation('derive', {
@@ -70,7 +88,15 @@ semantics.addOperation('derive', {
     [ left.derive(), '-', right.derive() ].join(''),
   MulExp_times: (left: Node, _mul: any, right: Node) =>
     [ left.derive(), '*', right.derive() ].join(''),
+  MulExp_div: (left: Node, _mul: any, right: Node) =>
+    [ left.derive(), '/', right.derive() ].join(''),
+
+  Assignment: (id: Node, _eq: any, e: Node) =>
+    [ id.derive(), '=', e.derive() ].join(''),
 });
+
+const db: { [key: string]: any } = {
+};
 
 semantics.addOperation('eval', {
   Program: (stmts: Node) => {
@@ -85,6 +111,18 @@ semantics.addOperation('eval', {
 
   MulExp_times: (left: Node, _mul: any, right: Node) =>
     left.eval() * right.eval(),
+
+  MulExp_div: (left: Node, _div: any, right: Node) =>
+    left.eval() / right.eval(),
+
+  ident: (first: Node, rest: Node) => {
+    let key = [first.sourceString, rest.sourceString].join('')
+    // console.log("LOOKUP", { key });
+    return db[key] || 'undefined'
+  },
+
+  Assignment: (id: Node, _eq: any, e: Node) =>
+    db[id.sourceString] = e.eval(),
 });
 
 export default class Odyssey {

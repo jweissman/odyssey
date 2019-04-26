@@ -1,4 +1,7 @@
 # the goal -- to fib!!!
 fib = (n) => n > 1 ? fib(n-1)+fib(n-2) : 1
-fib(3)
+fib(1) # =>  1
+fib(2) # =>  1
+fib(3) # =>  2
+fib(4) # =>  3
 

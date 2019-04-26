@@ -1,17 +1,21 @@
 Odyssey {
   Program = Stmt+
   Stmt = Expr
-  Expr = AddExp
+  Expr = Assignment | AddExp
+
+  Assignment = ident "=" Expr
+
   AddExp = AddExp "+" MulExp  -- plus
          | AddExp "-" MulExp -- minus
          | MulExp
-  
+
   MulExp = MulExp "*" PriExp -- times
          | MulExp "/" PriExp -- div
          | PriExp
 
   PriExp = PriVal
   PriVal = num | ident
+
   ident = letter alnum*
   num = digit+
   br = ";" | "\n"
