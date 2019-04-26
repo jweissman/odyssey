@@ -1,7 +1,4 @@
 console.log("loading grammar!!")
-// @ts-ignore
-// import grammar from './Odyssey.ohm'
-//
 var fs = require('fs');
 var ohm = require('ohm-js');
 var contents = fs.readFileSync('./src/Odyssey.ohm');
@@ -46,7 +43,6 @@ type Node = {
   sourceString: string
   derive: () => string
   tree: () => any 
-  // (Identifier | IntegerLiteral | BinaryExpression | AssignmentExpression)
   eval: () => any
   children: Node[]
 }
@@ -125,17 +121,20 @@ semantics.addOperation('eval', {
     db[id.sourceString] = e.eval(),
 });
 
-export default class Odyssey {
+export class Odyssey {
   interpret(str: string) {
     let m = grammar.match(str);
     let result = null;
     if (m.succeeded()) {
       let s = semantics(m)
-      result = [ s.derive(), s.tree(), s.eval() ];
+      result = {
+        derive: s.derive(),
+        tree: s.tree(),
+        value: s.eval()
+      };
     } else {
       result = 'parse failure';
     }
-    console.log("Odyssey#interpret", { str, result })
     return result;
   }
 }

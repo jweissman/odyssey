@@ -1,4 +1,5 @@
-import Odyssey, {
+import {
+  Odyssey,
   Identifier,
   IntegerLiteral,
   AssignmentExpression

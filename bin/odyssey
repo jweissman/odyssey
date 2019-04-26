@@ -1,4 +1,0 @@
-#!/usr/bin/env tsnode
-
-console.log("(would be) Loading odyssey...");
-
