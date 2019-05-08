@@ -2,34 +2,29 @@ import {
   Odyssey,
   Identifier,
   IntegerLiteral,
-  AssignmentExpression
+  AssignmentExpression,
+  DefunExpression,
 } from '.';
 
 describe("Odyssey", () => {
+  let odyssey: Odyssey;
+  beforeEach(() => odyssey = new Odyssey());
+
   it('simple values', () => {
-    let odyssey = new Odyssey()
     expect(odyssey.interpret("1234")).toEqual(
       [
         "1234", // derive
-        [{value: 1234}], // tree
+        [new IntegerLiteral(1234)], // tree
         '1234' // eval
       ]
     )
   });
 
   it('ids', () => {
-    let odyssey = new Odyssey()
-    expect(odyssey.interpret("a")).toEqual(
-      [
-        "a", // derive
-        [{value: 'a'}], // tree
-        'undefined' // eval
-      ]
-    )
+    expect(() => odyssey.interpret("a")).toThrow()
   });
 
   it('assignment', () => {
-    let odyssey = new Odyssey()
     expect(odyssey.interpret("a=3")).toEqual(
       [
         "a=3",
@@ -43,7 +38,6 @@ describe("Odyssey", () => {
   });
 
   it('retrieves assigned values', () => {
-    let odyssey = new Odyssey()
     expect(odyssey.interpret("a")).toEqual(
       [
         "a",
@@ -53,9 +47,10 @@ describe("Odyssey", () => {
     )
   });
 
+
   describe('binary expressions', () => {
     it('adds', () => {
-      let odyssey = new Odyssey()
+      //let odyssey = new Odyssey()
       expect(odyssey.interpret("12+4")).toEqual(
         [
           "12+4",
@@ -66,7 +61,7 @@ describe("Odyssey", () => {
     });
 
     it('subtracts', () => {
-      let odyssey = new Odyssey()
+      //let odyssey = new Odyssey()
       expect(odyssey.interpret("12-4")).toEqual(
         [
           "12-4",
@@ -77,7 +72,7 @@ describe("Odyssey", () => {
     });
 
     it('multiplies', () => {
-      let odyssey = new Odyssey()
+      //let odyssey = new Odyssey()
       expect(odyssey.interpret("12*4")).toEqual(
         [
           "12*4",
@@ -88,7 +83,7 @@ describe("Odyssey", () => {
     });
 
     it('divides', () => {
-      let odyssey = new Odyssey();
+      //let odyssey = new Odyssey();
       expect(odyssey.interpret("12/4")).toEqual(
         [
           "12/4",
@@ -99,7 +94,7 @@ describe("Odyssey", () => {
     });
 
     it('orders operations', () => {
-      let odyssey = new Odyssey();
+      //let odyssey = new Odyssey();
       expect(odyssey.interpret("12/4+2")).toEqual(
         [
           "12/4+2",
@@ -117,6 +112,20 @@ describe("Odyssey", () => {
           '5'
         ]
       )
+    });
+  });
+
+  // fib = (n) => n > 1 ? fib(n-1)+fib(n-2) : 1
+  describe('functions', () => {
+    it('defines functions', () => {
+      expect(odyssey.interpret("f=()=>3")).toEqual([
+        "f=()=>{3}",
+        [new AssignmentExpression(
+          new Identifier('f'),
+          new DefunExpression([], new IntegerLiteral(3))
+        )],
+        "()=>3"
+      ])
     });
   });
 });

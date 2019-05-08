@@ -4,6 +4,9 @@
   "description": "pl",
   "main": "index.js",
   "license": "MIT",
+  "scripts": {
+    "test": "jest"
+  },
   "dependencies": {
     "@types/node": "^11.13.5",
     "ohm-js": "^0.14.0"

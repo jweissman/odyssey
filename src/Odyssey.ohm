@@ -1,7 +1,16 @@
 Odyssey {
   Program = Stmt+
+
   Stmt = Expr
-  Expr = Assignment | AddExp
+
+  Expr = Assignment | Defun | AddExp
+
+  Defun = FormalParameterList "=>" Expr
+
+  FormalParameterList =
+    "(" ListOf<Parameter, ","> ")"
+
+  Parameter = ident
 
   Assignment = ident "=" Expr
 
