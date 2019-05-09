@@ -3,12 +3,17 @@ Odyssey {
 
   Stmt = Expr
 
-  Expr = Assignment | Defun | AddExp
+  Expr = Assignment | Defun | Funcall | AddExp
 
   Defun = FormalParameterList "=>" Expr
 
   FormalParameterList =
     "(" ListOf<Parameter, ","> ")"
+
+  Funcall = ident ArgList
+
+  ArgList =
+    "(" ListOf<Expr, ","> ")"
 
   Parameter = ident
 

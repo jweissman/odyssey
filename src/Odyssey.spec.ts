@@ -1,10 +1,12 @@
 import {
-  Odyssey,
   Identifier,
   IntegerLiteral,
   AssignmentExpression,
   DefunExpression,
-} from '.';
+  FuncallExpression,
+} from './ASTNode';
+
+import Odyssey from './Odyssey';
 
 describe("Odyssey", () => {
   let odyssey: Odyssey;
@@ -93,6 +95,8 @@ describe("Odyssey", () => {
       )
     });
 
+    test.todo('exponentiates')
+
     it('orders operations', () => {
       //let odyssey = new Odyssey();
       expect(odyssey.interpret("12/4+2")).toEqual(
@@ -127,5 +131,20 @@ describe("Odyssey", () => {
         "()=>3"
       ])
     });
+
+    test.todo('defines functions with params');
+
+    it('applies functions', () => {
+      odyssey.interpret("f=()=>3")
+      expect(odyssey.interpret("f()")).toEqual([
+        "f()",
+        [new FuncallExpression(
+          new Identifier('f'),
+        )],
+        "3"
+      ]);
+    });
+
+    test.todo('applies functions with arguments');
   });
 });
