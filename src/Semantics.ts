@@ -57,6 +57,10 @@ semantics.addOperation('tree', {
 
 });
 
+/**
+ * derive
+ */
+
 semantics.addOperation('derive', {
   Program: (stmts: Node) =>
     stmts.children.map((stmt: Node) => stmt.derive()).join(';'),
@@ -91,13 +95,19 @@ semantics.addOperation('derive', {
 
   EmptyListOf: () => '',
 
+  NonemptyListOf: (eFirst: Node, _sep: any, eRest: Node) => {
+    throw new Error("nonempty list not impl");
+    //debugger;
+    //return ['hi'];
+  },
+
   Funcall: (id: Node, args: Node) =>
     [
       id.derive(),
       args.derive(),
     ].join(''),
 
-  ArgList: (_lp: any, args: Node, _rp: any) => 
+  ArgList: (_lp: any, args: Node, _rp: any) =>
     [
       "(",
       args.children.length && 

@@ -4,6 +4,7 @@ import {
   AssignmentExpression,
   DefunExpression,
   FuncallExpression,
+  BinaryExpression,
 } from './ASTNode';
 
 import Odyssey from './Odyssey';
@@ -89,7 +90,11 @@ describe("Odyssey", () => {
       expect(odyssey.interpret("12/4")).toEqual(
         [
           "12/4",
-          [{left: {value: 12}, op: '/', right: { value: 4 }}],
+          [new BinaryExpression(
+            '/',
+            new IntegerLiteral(12),
+            new IntegerLiteral(4)
+          )], //{left: {value: 12}, op: '/', right: { value: 4 }}],
           '3'
         ]
       )
@@ -132,15 +137,31 @@ describe("Odyssey", () => {
       ])
     });
 
-    test.todo('defines functions with params');
+    xit('defines functions with params', () => {
+      let tree = new AssignmentExpression(
+        new Identifier('double'),
+        new DefunExpression(
+          ['x'],
+          new BinaryExpression(
+            '*',
+            new Identifier('x'),
+            new IntegerLiteral(2)
+          )
+        )
+      );
+
+      expect(odyssey.interpret("double=(x)=>x*2")).toEqual([
+        "double=(x)=>x*2",
+        [tree],
+        "(x)=>x*2",
+      ]);
+    });
 
     it('applies functions', () => {
       odyssey.interpret("f=()=>3")
       expect(odyssey.interpret("f()")).toEqual([
         "f()",
-        [new FuncallExpression(
-          new Identifier('f'),
-        )],
+        [new FuncallExpression(new Identifier('f'))],
         "3"
       ]);
     });
