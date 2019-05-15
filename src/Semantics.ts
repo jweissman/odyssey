@@ -43,16 +43,21 @@ semantics.addOperation('tree', {
   Assignment: (id: Node, _eq: any, e: Node): AssignmentExpression =>
     new AssignmentExpression(id.tree(), e.tree()),
 
-  Defun: (params: Node, _fa: any, e: Node) =>
-    new DefunExpression(params.tree(), e.tree()),
+  Defun: (params: Node, _fa: any, e: Node) => {
+    let paramNames = params.tree().map((id: Identifier) => id.value)
+    return new DefunExpression(paramNames, e.tree())
+  },
 
   FormalParameterList: (_lp: any, params: Node, _rp: any) => params.tree(),
 
   EmptyListOf: (): Node[] => [],
 
+  NonemptyListOf: (eFirst: Node, _sep: any, eRest: Node) =>
+    [eFirst.tree(), ...eRest.tree()],
+
   Funcall: (id: Node, args: Node) =>
     new FuncallExpression(id.tree(), args.tree()),
-    
+
   ArgList: (_lp: any, args: Node, _rp: any) => args.tree(),
 
 });
@@ -95,11 +100,8 @@ semantics.addOperation('derive', {
 
   EmptyListOf: () => '',
 
-  NonemptyListOf: (eFirst: Node, _sep: any, eRest: Node) => {
-    throw new Error("nonempty list not impl");
-    //debugger;
-    //return ['hi'];
-  },
+  NonemptyListOf: (eFirst: Node, _sep: any, eRest: Node) =>
+    [eFirst.derive(), ...eRest.derive()],
 
   Funcall: (id: Node, args: Node) =>
     [
@@ -110,7 +112,7 @@ semantics.addOperation('derive', {
   ArgList: (_lp: any, args: Node, _rp: any) =>
     [
       "(",
-      args.children.length && 
+      args.children.length &&
         args.children.map((arg: Node) => arg.derive()),
       ")",
     ].join('')
@@ -131,18 +133,21 @@ class OdysseyInteger {
   div(other: OdysseyInteger)   { return new OdysseyInteger(this.value / other.value); }
 }
 
+
 class OdysseyFunction {
-  constructor(public argList: Array<Node>, public methodBody: Node) {}
+  constructor(public paramList: Array<String>, public methodBody: Node) {}
   pretty = () => {
-    console.log({ fn: this });
-    return [ 
+    debugger;
+    // console.log({ fn: this });
+    return [
       "(",
-      this.argList.length > 0 ? this.argList.map(arg => arg.derive()).join(',') : '',
+      this.paramList.join(', '),
+      //length > 0 ? this.argList.map(arg => arg.derive()).join(',') : '',
       ")",
       "=>",
-      // "{",
-      this.methodBody.derive()
-      // "}",
+      "{",
+      this.methodBody.derive(),
+      "}",
     ].join('')
 
   }
@@ -182,7 +187,8 @@ semantics.addOperation('eval', {
     db[id.sourceString] = e.eval(),
 
   Defun: (params: Node, _fa: any, e: Node) => {
-    return new OdysseyFunction(params.tree(), e);
+    let paramNames = params.tree().map((id: Identifier) => id.value)
+    return new OdysseyFunction(paramNames, e);
   },
 
   Funcall: (id: Node, args: Node) => {

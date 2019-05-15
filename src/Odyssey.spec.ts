@@ -133,11 +133,11 @@ describe("Odyssey", () => {
           new Identifier('f'),
           new DefunExpression([], new IntegerLiteral(3))
         )],
-        "()=>3"
+        "()=>{3}"
       ])
     });
 
-    xit('defines functions with params', () => {
+    it('defines functions with params', () => {
       let tree = new AssignmentExpression(
         new Identifier('double'),
         new DefunExpression(
@@ -151,9 +151,9 @@ describe("Odyssey", () => {
       );
 
       expect(odyssey.interpret("double=(x)=>x*2")).toEqual([
-        "double=(x)=>x*2",
+        "double=(x)=>{x*2}",
         [tree],
-        "(x)=>x*2",
+        "(x)=>{x*2}",
       ]);
     });
 
