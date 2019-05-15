@@ -166,6 +166,16 @@ describe("Odyssey", () => {
       ]);
     });
 
-    test.todo('applies functions with arguments');
+    xit('applies functions with arguments', () => {
+      odyssey.interpret("double=(x)=>x*2");
+      expect(odyssey.interpret("double(3)")).toEqual([
+        "double(3)",
+        [new FuncallExpression(
+          new Identifier('double'),
+          [new IntegerLiteral(3)]
+        )],
+        '6'
+      ]);
+    });
   });
 });

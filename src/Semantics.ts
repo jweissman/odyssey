@@ -121,8 +121,38 @@ semantics.addOperation('derive', {
 /**
  * evaluation
  */
+class OdysseyContext {
+  contexts: Array<{ [key: string]: any }> = [{}]
 
-const db: { [key: string]: any } = {};
+  get current() {
+    return this.contexts[this.contexts.length-1];
+  }
+
+  put = (key: string, val: any) => {
+    this.current[key] = val;
+    return val;
+  }
+
+  retrieve = (key: string) => {
+    let value = this.current[key];
+    if (!value) {
+      throw new Error(`No such variable ${key}`);
+    }
+    return value;
+  }
+
+  push = () => {
+    let nextContext = {}
+    this.contexts.push(nextContext)
+  }
+
+  pop = () => {
+    this.contexts.pop();
+  }
+}
+
+const environment = new OdysseyContext()
+
 
 class OdysseyInteger {
   constructor(public value: number) {}
@@ -137,12 +167,9 @@ class OdysseyInteger {
 class OdysseyFunction {
   constructor(public paramList: Array<String>, public methodBody: Node) {}
   pretty = () => {
-    debugger;
-    // console.log({ fn: this });
     return [
       "(",
       this.paramList.join(', '),
-      //length > 0 ? this.argList.map(arg => arg.derive()).join(',') : '',
       ")",
       "=>",
       "{",
@@ -177,14 +204,11 @@ semantics.addOperation('eval', {
 
   ident: (first: Node, rest: Node) => {
     let key = [first.sourceString, rest.sourceString].join('')
-    if (!db[key]) {
-      throw new Error(`No such variable ${key}`);
-    }
-    return db[key]
+    return environment.retrieve(key);
   },
 
   Assignment: (id: Node, _eq: any, e: Node) =>
-    db[id.sourceString] = e.eval(),
+    environment.put(id.sourceString, e.eval()),
 
   Defun: (params: Node, _fa: any, e: Node) => {
     let paramNames = params.tree().map((id: Identifier) => id.value)
@@ -193,7 +217,14 @@ semantics.addOperation('eval', {
 
   Funcall: (id: Node, args: Node) => {
     let fn = id.eval();
-    return fn.methodBody.eval();
+    environment.push()
+    // should really pick apart args this in some ArgList parser...?
+    // note args are the VALUES that we need to bind to formal param names
+    // [and now apply the args to current ctx...]
+    debugger;
+    let retVal = fn.methodBody.eval();
+    environment.pop()
+    return retVal;
   }
 });
 
