@@ -1,2 +1,5 @@
 import Odyssey from './Odyssey';
-export Odyssey;
+
+console.log("Odyssey!", Odyssey);
+
+export { Odyssey };

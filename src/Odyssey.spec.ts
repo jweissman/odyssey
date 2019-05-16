@@ -166,8 +166,20 @@ describe("Odyssey", () => {
       ]);
     });
 
+    it('treats function calls as values', () => {
+      odyssey.interpret("f=()=>3")
+      expect(odyssey.interpret("f() + 4")).toEqual([
+        "f()+4",
+        [new BinaryExpression('+',
+          new FuncallExpression(new Identifier('f')),
+          new IntegerLiteral(4)
+        )],
+        "7"
+      ]);
+    });
+
     it('applies functions with a single argument', () => {
-      odyssey.interpret("double=(x)=>x*2");
+      odyssey.evaluate("double=(x)=>x*2");
       expect(odyssey.interpret("double(3)")).toEqual([
         "double(3)",
         [new FuncallExpression(
@@ -178,5 +190,23 @@ describe("Odyssey", () => {
       ]);
     });
 
+    it('applies functions with more than one argument', () => {
+      odyssey.evaluate("times=(x,y)=>x*y");
+      expect(odyssey.interpret("times(3, 5)")).toEqual([
+        "times(3,5)",
+        [new FuncallExpression(
+          new Identifier('times'),
+          [new IntegerLiteral(3), new IntegerLiteral(5)]
+        )],
+        '15'
+      ]);
+    });
+
+    it('can define higher-order functions', () => {
+      odyssey.evaluate("square=(x)=>x*x");
+      odyssey.evaluate("twice=(f,x)=>f(f(x))")
+      expect(odyssey.evaluate('square(2)')).toEqual('4')
+      expect(odyssey.evaluate('twice(square, 2)')).toEqual('16')
+    });
   });
 });

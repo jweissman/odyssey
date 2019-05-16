@@ -145,14 +145,16 @@ class OdysseyContext {
     return value;
   }
 
-  push = () => {
-    let nextContext = {}
+  push = (ctx: { [key: string]: any }) => {
+    let nextContext = Object.assign({}, ctx);
     this.contexts.push(nextContext)
   }
 
   pop = () => {
     this.contexts.pop();
   }
+
+  copy = () => Object.assign({}, this.current)
 }
 
 const environment = new OdysseyContext()
@@ -169,7 +171,11 @@ class OdysseyInteger {
 
 
 class OdysseyFunction {
-  constructor(public paramList: Array<String>, public methodBody: Node) {}
+  constructor(
+    public paramList: Array<String>,
+    public methodBody: Node,
+    public context: { [key: string]: any }
+  ) {}
   pretty = () => {
     return [
       "(",
@@ -216,14 +222,14 @@ semantics.addOperation('eval', {
 
   Defun: (params: Node, _fa: any, e: Node) => {
     let paramNames = params.tree().map((id: Identifier) => id.value)
-    return new OdysseyFunction(paramNames, e);
+    return new OdysseyFunction(paramNames, e, environment.copy());
   },
 
   Funcall: (id: Node, args: Node) => {
     let fn = id.eval();
-    let theArgs = args.eval(); 
+    let theArgs = args.eval();
     let argumentValues = util.zip(fn.paramList, theArgs);
-    environment.push();
+    environment.push(fn.context);
     argumentValues.forEach(([key, val]: [string, any]) => {
       environment.put(key, val);
     });
@@ -238,12 +244,8 @@ semantics.addOperation('eval', {
 
   NonemptyListOf: (eFirst: Node, _sep: any, eRest: Node) => {
     let result = [eFirst.eval(), ...eRest.eval()];
-    //debugger;
     return result;
   }
-
-
 });
-
 
 export default semantics;

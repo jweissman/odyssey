@@ -3,7 +3,7 @@ Odyssey {
 
   Stmt = Expr
 
-  Expr = Assignment | Defun | Funcall | AddExp
+  Expr = Assignment | Defun | AddExp
 
   Defun = FormalParameterList "=>" Expr
 
@@ -28,7 +28,7 @@ Odyssey {
          | PriExp
 
   PriExp = PriVal
-  PriVal = num | ident
+  PriVal = Funcall | num | ident
 
   ident = letter alnum*
   num = digit+

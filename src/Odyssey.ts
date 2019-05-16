@@ -2,6 +2,10 @@ import grammar from './Grammar';
 import semantics from './Semantics';
 
 export default class Odyssey {
+  evaluate(str: string) {
+    return this.interpret(str)[2];
+  }
+
   interpret(str: string) {
     let m = grammar.match(str);
     let result = null;
