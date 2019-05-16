@@ -17,6 +17,10 @@ type Node = {
   children: Node[]
 }
 
+const util = {
+  zip: (arr: Array<any>, other: Array<any>) => arr.map((e,i) => [e,other[i]]),
+}
+
 const semantics = grammar.createSemantics()
 
 semantics.addOperation('tree', {
@@ -136,7 +140,7 @@ class OdysseyContext {
   retrieve = (key: string) => {
     let value = this.current[key];
     if (!value) {
-      throw new Error(`No such variable ${key}`);
+      throw new Error(`No such variable "${key}"`);
     }
     return value;
   }
@@ -217,15 +221,28 @@ semantics.addOperation('eval', {
 
   Funcall: (id: Node, args: Node) => {
     let fn = id.eval();
-    environment.push()
-    // should really pick apart args this in some ArgList parser...?
-    // note args are the VALUES that we need to bind to formal param names
-    // [and now apply the args to current ctx...]
-    debugger;
+    let theArgs = args.eval(); 
+    let argumentValues = util.zip(fn.paramList, theArgs);
+    environment.push();
+    argumentValues.forEach(([key, val]: [string, any]) => {
+      environment.put(key, val);
+    });
     let retVal = fn.methodBody.eval();
-    environment.pop()
+    environment.pop();
     return retVal;
+  },
+
+  ArgList: (_lp: any, args: Node, _rp: any) => args.eval(),
+
+  EmptyListOf: (): Node[] => [],
+
+  NonemptyListOf: (eFirst: Node, _sep: any, eRest: Node) => {
+    let result = [eFirst.eval(), ...eRest.eval()];
+    //debugger;
+    return result;
   }
+
+
 });
 
 

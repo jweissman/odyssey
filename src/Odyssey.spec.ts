@@ -166,7 +166,7 @@ describe("Odyssey", () => {
       ]);
     });
 
-    xit('applies functions with arguments', () => {
+    it('applies functions with a single argument', () => {
       odyssey.interpret("double=(x)=>x*2");
       expect(odyssey.interpret("double(3)")).toEqual([
         "double(3)",
@@ -177,5 +177,6 @@ describe("Odyssey", () => {
         '6'
       ]);
     });
+
   });
 });
