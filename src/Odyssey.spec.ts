@@ -100,10 +100,7 @@ describe("Odyssey", () => {
       )
     });
 
-    test.todo('exponentiates')
-
     it('orders operations', () => {
-      //let odyssey = new Odyssey();
       expect(odyssey.interpret("12/4+2")).toEqual(
         [
           "12/4+2",
@@ -121,6 +118,14 @@ describe("Odyssey", () => {
           '5'
         ]
       )
+    });
+
+    it('exponentiation', () => {
+      expect(odyssey.evaluate("2*3^4")).toEqual('162')
+    });
+
+    it('parentheses', () => {
+      expect(odyssey.evaluate("(2*3)^4")).toEqual('1296')
     });
   });
 
@@ -208,5 +213,9 @@ describe("Odyssey", () => {
       expect(odyssey.evaluate('square(2)')).toEqual('4')
       expect(odyssey.evaluate('twice(square, 2)')).toEqual('16')
     });
+
+    test.todo('currying');
+    test.todo('omit parens around funcall args');
+    test.todo('omit parens around defun params');
   });
 });

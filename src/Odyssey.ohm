@@ -23,14 +23,17 @@ Odyssey {
          | AddExp "-" MulExp -- minus
          | MulExp
 
-  MulExp = MulExp "*" PriExp -- times
-         | MulExp "/" PriExp -- div
+  MulExp = MulExp "*" ExpExp -- times
+         | MulExp "/" ExpExp -- div
+         | ExpExp
+
+  ExpExp = ExpExp "^" PriExp -- pow
          | PriExp
 
-  PriExp = PriVal
+  PriExp = "(" Expr ")" -- parens
+         | PriVal
   PriVal = Funcall | num | ident
 
   ident = letter alnum*
   num = digit+
-  br = ";" | "\n"
 }

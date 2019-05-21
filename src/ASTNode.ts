@@ -13,7 +13,15 @@ export class IntegerLiteral extends ASTNode {
   }
 }
 
-type Op = '+' | '-' | '*' | '/'
+export class ParenthesizedExpression extends ASTNode {
+  constructor(
+    public body: ASTNode
+  ) {
+    super()
+  }
+}
+
+type Op = '+' | '-' | '*' | '/' | '^'
 export class BinaryExpression extends ASTNode {
   constructor(
     public op: Op,

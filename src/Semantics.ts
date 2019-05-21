@@ -7,6 +7,7 @@ import {
   DefunExpression,
   FuncallExpression,
   BinaryExpression,
+  ParenthesizedExpression,
 } from './ASTNode';
 
 type Node = {
@@ -38,11 +39,17 @@ semantics.addOperation('tree', {
   AddExp_minus: (left: Node, _sub: any, right: Node): BinaryExpression =>
     new BinaryExpression('-', left.tree(), right.tree()),
 
-  MulExp_times: (left: Node, _tm: any, right: Node): BinaryExpression =>
+  MulExp_times: (left: Node, _mul: any, right: Node): BinaryExpression =>
     new BinaryExpression('*', left.tree(), right.tree()),
 
-  MulExp_div: (left: Node, _tm: any, right: Node): BinaryExpression =>
+  MulExp_div: (left: Node, _div: any, right: Node): BinaryExpression =>
     new BinaryExpression('/', left.tree(), right.tree()),
+
+  ExpExp_pow: (left: Node, _pow: any, right: Node): BinaryExpression =>
+    new BinaryExpression('^', left.tree(), right.tree()),
+
+  PriExp_parens: (_lp: any, body: Node, _rp: any): ParenthesizedExpression =>
+    new ParenthesizedExpression(body.tree()),
 
   Assignment: (id: Node, _eq: any, e: Node): AssignmentExpression =>
     new AssignmentExpression(id.tree(), e.tree()),
@@ -73,17 +80,29 @@ semantics.addOperation('tree', {
 semantics.addOperation('derive', {
   Program: (stmts: Node) =>
     stmts.children.map((stmt: Node) => stmt.derive()).join(';'),
+
   ident: (leadingChar: Node, rest: Node) =>
     [leadingChar.sourceString, rest.sourceString].join(''),
+
   num: (val: Node) => val.sourceString,
+
   AddExp_plus: (left: Node, _pl: any, right: Node) =>
     [ left.derive(), '+', right.derive() ].join(''),
+
   AddExp_minus: (left: Node, _sub: any, right: Node) =>
     [ left.derive(), '-', right.derive() ].join(''),
+
   MulExp_times: (left: Node, _mul: any, right: Node) =>
     [ left.derive(), '*', right.derive() ].join(''),
+
   MulExp_div: (left: Node, _mul: any, right: Node) =>
     [ left.derive(), '/', right.derive() ].join(''),
+
+  ExpExp_pow: (left: Node, _pow: any, right: Node) =>
+    [ left.derive(), '^', right.derive() ].join(''),
+
+  PriExp_parens: (_lp: any, body: Node, _rp: any) =>
+    [ "(", body.derive(), ")" ].join(''),
 
   Assignment: (id: Node, _eq: any, e: Node) =>
     [ id.derive(), '=', e.derive() ].join(''),
@@ -167,6 +186,7 @@ class OdysseyInteger {
   minus(other: OdysseyInteger) { return new OdysseyInteger(this.value - other.value); }
   times(other: OdysseyInteger) { return new OdysseyInteger(this.value * other.value); }
   div(other: OdysseyInteger)   { return new OdysseyInteger(this.value / other.value); }
+  pow(other: OdysseyInteger)   { return new OdysseyInteger(this.value ** other.value); }
 }
 
 
@@ -211,6 +231,12 @@ semantics.addOperation('eval', {
 
   MulExp_div: (left: Node, _div: any, right: Node) =>
     left.eval().div(right.eval()),
+
+  ExpExp_pow: (left: Node, _pow: any, right: Node) =>
+    left.eval().pow(right.eval()),
+
+  PriExp_parens: (_lp: any, body: Node, _rp: any) =>
+    body.eval(),
 
   ident: (first: Node, rest: Node) => {
     let key = [first.sourceString, rest.sourceString].join('')
