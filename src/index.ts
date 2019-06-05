@@ -1,5 +1,5 @@
 import Odyssey from './Odyssey';
 
-console.log("Odyssey!", Odyssey);
+console.log("The journey begins...");
 
 export { Odyssey };

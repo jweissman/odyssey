@@ -1,7 +1,6 @@
 #!/usr/bin/env ts-node
 
 const { Odyssey } = require("../src");
-console.log("ODY", Odyssey);
 let odyssey = new Odyssey();
 
 let logo: string = `

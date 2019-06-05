@@ -207,6 +207,7 @@ describe("Odyssey", () => {
       ]);
     });
 
+
     it('can define higher-order functions', () => {
       odyssey.evaluate("square=(x)=>x*x");
       odyssey.evaluate("twice=(f,x)=>f(f(x))")
@@ -214,7 +215,13 @@ describe("Odyssey", () => {
       expect(odyssey.evaluate('twice(square, 2)')).toEqual('16')
     });
 
-    test.todo('currying');
+    it('curries', () => {
+      odyssey.evaluate("plus=(x)=>(y)=>x+y")
+      odyssey.evaluate("inc=plus(1)")
+      expect(odyssey.evaluate("inc(3)")).toEqual('4')
+      expect(odyssey.evaluate("inc(30)")).toEqual('31')
+    });
+
     test.todo('omit parens around funcall args');
     test.todo('omit parens around defun params');
   });
