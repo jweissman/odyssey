@@ -27,6 +27,9 @@ const derive = {
   PriExp_parens: (_lp: any, body: Node, _rp: any) =>
     [ "(", body.derive(), ")" ].join(''),
 
+  PriExp_neg: (_sgn: any, val: Node) =>
+    [ "-", val.derive() ],
+
   Assignment: (id: Node, _eq: any, e: Node) =>
     [ id.derive(), '=', e.derive() ].join(''),
 

@@ -7,6 +7,7 @@ import {
   FuncallExpression,
   BinaryExpression,
   ParenthesizedExpression,
+  NegatedExpression,
 } from './ASTNode';
 
 const tree = {
@@ -35,6 +36,9 @@ const tree = {
 
   PriExp_parens: (_lp: any, body: Node, _rp: any): ParenthesizedExpression =>
     new ParenthesizedExpression(body.tree()),
+
+  PriExp_neg: (_sgn: any, val: Node): NegatedExpression =>
+    new NegatedExpression(val.tree()),
 
   Assignment: (id: Node, _eq: any, e: Node): AssignmentExpression =>
     new AssignmentExpression(id.tree(), e.tree()),

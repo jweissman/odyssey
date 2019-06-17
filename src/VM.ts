@@ -42,6 +42,9 @@ export class OdysseyInteger {
   times(other: OdysseyInteger) { return new OdysseyInteger(this.value * other.value); }
   div(other: OdysseyInteger)   { return new OdysseyInteger(this.value / other.value); }
   pow(other: OdysseyInteger)   { return new OdysseyInteger(this.value ** other.value); }
+  negate() {
+    return new OdysseyInteger(-this.value);
+  }
 }
 
 

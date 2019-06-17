@@ -46,6 +46,9 @@ const interpret = {
   PriExp_parens: (_lp: any, body: Node, _rp: any) =>
     body.eval(),
 
+  PriExp_neg: (_sgn: any, val: Node) =>
+    val.eval().negate(),
+
   ident: (first: Node, rest: Node) => {
     let key = [first.sourceString, rest.sourceString].join('')
     return environment.retrieve(key);

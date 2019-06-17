@@ -127,6 +127,10 @@ describe("Odyssey", () => {
     it('parentheses', () => {
       expect(odyssey.evaluate("(2*3)^4")).toEqual('1296')
     });
+
+    it('negates', () => {
+      expect(odyssey.evaluate("-2+1")).toEqual('-1')
+    });
   });
 
   // fib = (n) => n > 1 ? fib(n-1)+fib(n-2) : 1

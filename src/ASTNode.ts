@@ -21,6 +21,12 @@ export class ParenthesizedExpression extends ASTNode {
   }
 }
 
+export class NegatedExpression extends ASTNode {
+  constructor(public val: ASTNode) {
+    super()
+  }
+}
+
 type Op = '+' | '-' | '*' | '/' | '^'
 export class BinaryExpression extends ASTNode {
   constructor(
