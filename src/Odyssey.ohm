@@ -1,7 +1,8 @@
 Odyssey {
-  Program = Stmt+
+  Program = Stmt+ 
 
   Stmt = Expr
+  // StmtDelim = ";" | "\n" | end
 
   Expr = Assignment | Defun | AddExp
 

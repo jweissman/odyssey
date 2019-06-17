@@ -32,8 +32,6 @@ export class OdysseyContext {
   copy = () => Object.assign({}, this.current)
 }
 
-
-
 export class OdysseyInteger {
   constructor(public value: number) {}
   pretty = () => this.value.toString();
@@ -64,7 +62,6 @@ export class OdysseyFunction {
       this.methodBody.derive(),
       "}",
     ].join('')
-
   }
 }
 

@@ -13,47 +13,48 @@ describe("Odyssey", () => {
   let odyssey: Odyssey;
   beforeEach(() => odyssey = new Odyssey());
 
-  it('simple values', () => {
-    expect(odyssey.interpret("1234")).toEqual(
-      [
-        "1234", // derive
-        [new IntegerLiteral(1234)], // tree
-        '1234' // eval
-      ]
-    )
-  });
+  describe('elements', () => {
+    it('values', () => {
+      expect(odyssey.interpret("1234")).toEqual(
+        [
+          "1234", // derive
+          [new IntegerLiteral(1234)], // tree
+          '1234' // eval
+        ]
+      )
+    });
 
-  it('ids', () => {
-    expect(() => odyssey.interpret("a")).toThrow()
-  });
+    it('ids', () => {
+      expect(() => odyssey.interpret("a")).toThrow()
+    });
 
-  it('assignment', () => {
-    expect(odyssey.interpret("a=3")).toEqual(
-      [
-        "a=3",
-        [new AssignmentExpression(
-          new Identifier('a'),
-          new IntegerLiteral(3)
-        )],
-        '3'
-      ]
-    )
-  });
+    it('assignment', () => {
+      expect(odyssey.interpret("a=3")).toEqual(
+        [
+          "a=3",
+          [new AssignmentExpression(
+            new Identifier('a'),
+            new IntegerLiteral(3)
+          )],
+          '3'
+        ]
+      )
+    });
 
-  it('retrieves assigned values', () => {
-    expect(odyssey.interpret("a")).toEqual(
-      [
-        "a",
-        [ new Identifier('a') ],
-        '3'
-      ]
-    )
+    it('retrieves assigned values', () => {
+      expect(odyssey.interpret("a")).toEqual(
+        [
+          "a",
+          [ new Identifier('a') ],
+          '3'
+        ]
+      )
+    });
   });
 
 
   describe('binary expressions', () => {
     it('adds', () => {
-      //let odyssey = new Odyssey()
       expect(odyssey.interpret("12+4")).toEqual(
         [
           "12+4",
@@ -64,7 +65,6 @@ describe("Odyssey", () => {
     });
 
     it('subtracts', () => {
-      //let odyssey = new Odyssey()
       expect(odyssey.interpret("12-4")).toEqual(
         [
           "12-4",
@@ -75,7 +75,6 @@ describe("Odyssey", () => {
     });
 
     it('multiplies', () => {
-      //let odyssey = new Odyssey()
       expect(odyssey.interpret("12*4")).toEqual(
         [
           "12*4",
@@ -86,7 +85,6 @@ describe("Odyssey", () => {
     });
 
     it('divides', () => {
-      //let odyssey = new Odyssey();
       expect(odyssey.interpret("12/4")).toEqual(
         [
           "12/4",
@@ -94,7 +92,7 @@ describe("Odyssey", () => {
             '/',
             new IntegerLiteral(12),
             new IntegerLiteral(4)
-          )], //{left: {value: 12}, op: '/', right: { value: 4 }}],
+          )],
           '3'
         ]
       )
@@ -131,6 +129,7 @@ describe("Odyssey", () => {
     it('negates', () => {
       expect(odyssey.evaluate("-2+1")).toEqual('-1')
     });
+
   });
 
   // fib = (n) => n > 1 ? fib(n-1)+fib(n-2) : 1
@@ -226,7 +225,23 @@ describe("Odyssey", () => {
       expect(odyssey.evaluate("inc(30)")).toEqual('31')
     });
 
+    test.todo('multi-line fns');
     test.todo('omit parens around funcall args');
     test.todo('omit parens around defun params');
   });
+
+  describe('syntax', () => {
+    xit('multiple stmts', () => {
+      expect(odyssey.evaluate('a=3; a+2')).toEqual('5')
+      expect(odyssey.evaluate(
+        `
+          b = 10
+          a + b
+        `
+      )).toEqual('13')
+    });
+  });
+
+  test.todo('modules');
+  test.todo('classes');
 });
