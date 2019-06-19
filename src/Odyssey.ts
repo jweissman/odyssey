@@ -12,8 +12,11 @@ export default class Odyssey {
     if (m.succeeded()) {
       let s = semantics(m)
       let derive = s.derive();
+      //console.log("DERIVE: ", derive);
       let tree = s.tree();
+      //console.log("TREE: ", tree);
       let val = s.eval();
+      //console.log("VAL: ", val);
       result = [
         derive,
         tree,

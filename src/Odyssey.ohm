@@ -1,8 +1,8 @@
 Odyssey {
-  Program = Stmt+ 
+  Program = listOf<Stmt, br> 
+  br = ";" | "\n" | "\r"
 
   Stmt = Expr
-  // StmtDelim = ";" | "\n" | end
 
   Expr = Assignment | Defun | AddExp
 

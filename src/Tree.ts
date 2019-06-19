@@ -55,6 +55,9 @@ const tree = {
   NonemptyListOf: (eFirst: Node, _sep: any, eRest: Node) =>
     [eFirst.tree(), ...eRest.tree()],
 
+  nonemptyListOf: (eFirst: Node, _sep: any, eRest: Node) =>
+    [eFirst.tree(), ...eRest.tree()],
+
   Funcall: (id: Node, args: Node) =>
     new FuncallExpression(id.tree(), args.tree()),
 

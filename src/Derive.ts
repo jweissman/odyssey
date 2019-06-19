@@ -1,7 +1,7 @@
 import { Node } from './types/node';
 
 const derive = {
-  Program: (stmts: Node) =>
+  Program: (stmts: Node) => //, _delims: Node) =>
     stmts.children.map((stmt: Node) => stmt.derive()).join(';'),
 
   ident: (leadingChar: Node, rest: Node) =>
@@ -9,10 +9,10 @@ const derive = {
 
   num: (val: Node) => val.sourceString,
 
-  AddExp_plus: (left: Node, _pl: any, right: Node) =>
+  AddExp_plus: (left: Node, _pl: Node, right: Node) =>
     [ left.derive(), '+', right.derive() ].join(''),
 
-  AddExp_minus: (left: Node, _sub: any, right: Node) =>
+  AddExp_minus: (left: Node, _sub: Node, right: Node) =>
     [ left.derive(), '-', right.derive() ].join(''),
 
   MulExp_times: (left: Node, _mul: any, right: Node) =>
@@ -49,6 +49,9 @@ const derive = {
   EmptyListOf: () => '',
 
   NonemptyListOf: (eFirst: Node, _sep: any, eRest: Node) =>
+    [eFirst.derive(), ...eRest.derive()],
+
+  nonemptyListOf: (eFirst: Node, _sep: any, eRest: Node) =>
     [eFirst.derive(), ...eRest.derive()],
 
   Funcall: (id: Node, args: Node) =>

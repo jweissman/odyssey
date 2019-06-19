@@ -17,12 +17,13 @@ const environment = new OdysseyContext()
 /**
  * evaluation
  */
-
 const interpret = {
   Program: (stmts: Node) => {
-    let res;
-    stmts.children.forEach((stmt: Node) => res = stmt.eval());
-    return res;
+    let results = stmts.eval();
+    return results[results.length-1];
+    //debugger;
+    //stmts.children.forEach((stmt: Node) => res = stmt.eval());
+    //return res;
   },
 
   num: (val: Node) =>
@@ -62,6 +63,7 @@ const interpret = {
     return new OdysseyFunction(paramNames, e, environment.copy());
   },
 
+  // call arbitrary function /////////
   Funcall: (id: Node, args: Node) => {
     let fn = id.eval();
     let theArgs = args.eval();
@@ -82,7 +84,13 @@ const interpret = {
   NonemptyListOf: (eFirst: Node, _sep: any, eRest: Node) => {
     let result = [eFirst.eval(), ...eRest.eval()];
     return result;
-  }
+  },
+
+  nonemptyListOf: (eFirst: Node, _sep: any, eRest: Node) => {
+    let result = [eFirst.eval(), ...eRest.eval()];
+    //debugger;
+    return result;
+  },
 };
 
 export default interpret;
