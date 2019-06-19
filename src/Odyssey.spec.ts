@@ -231,7 +231,7 @@ describe("Odyssey", () => {
   });
 
   describe('syntax', () => {
-    xit('multiple stmts', () => {
+    it('multiple stmts', () => {
       expect(odyssey.evaluate('a=3; a+2')).toEqual('5')
       expect(odyssey.evaluate(
         `
@@ -240,7 +240,14 @@ describe("Odyssey", () => {
         `
       )).toEqual('13')
     });
+
+    xit('comparisons', () => {
+      expect(odyssey.evaluate('1<2')).toEqual('True')
+      expect(odyssey.evaluate('1==2')).toEqual('False')
+      // expect(odyssey.evaluate('1>2')).toEqual('False')
+    });
   });
+
 
   test.todo('modules');
   test.todo('classes');

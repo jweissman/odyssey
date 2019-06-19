@@ -20,6 +20,10 @@ Odyssey {
 
   Assignment = ident "=" Expr
 
+  CmpExp = AddExp ">" CmpExp -- gt
+         | AddExp "==" CmpExp -- eq
+         | AddExp
+
   AddExp = AddExp "+" MulExp  -- plus
          | AddExp "-" MulExp -- minus
          | MulExp
