@@ -21,13 +21,19 @@ const interpret = {
   Program: (stmts: Node) => {
     let results = stmts.eval();
     return results[results.length-1];
-    //debugger;
-    //stmts.children.forEach((stmt: Node) => res = stmt.eval());
-    //return res;
   },
 
   num: (val: Node) =>
     new OdysseyInteger(Number(val.sourceString)),
+
+  CmpExp_lt: (left: Node, _lt: Node, right: Node) =>
+    left.eval().isLessThan(right.eval()),
+
+  CmpExp_eq: (left: Node, _lt: Node, right: Node) =>
+    left.eval().isEqualTo(right.eval()),
+
+  CmpExp_gt: (left: Node, _lt: Node, right: Node) =>
+    left.eval().isGreaterThan(right.eval()),
 
   AddExp_plus: (left: Node, _plus: any, right: Node) =>
     left.eval().plus(right.eval()),

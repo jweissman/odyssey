@@ -11,14 +11,14 @@ export default class Odyssey {
     let result = null;
     if (m.succeeded()) {
       let s = semantics(m)
-      let derive = s.derive();
+      let pretty = s.pretty();
       //console.log("DERIVE: ", derive);
       let tree = s.tree();
       //console.log("TREE: ", tree);
       let val = s.eval();
       //console.log("VAL: ", val);
       result = [
-        derive,
+        pretty,
         tree,
         val.pretty()
       ];

@@ -27,7 +27,7 @@ export class NegatedExpression extends ASTNode {
   }
 }
 
-type Op = '+' | '-' | '*' | '/' | '^'
+type Op = '+' | '-' | '*' | '/' | '^' | '<' | '=' | '>'
 export class BinaryExpression extends ASTNode {
   constructor(
     public op: Op,

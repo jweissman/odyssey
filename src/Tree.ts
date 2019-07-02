@@ -19,6 +19,15 @@ const tree = {
     Number(digits.sourceString)
   ),
 
+  CmpExp_lt: (left: Node, _lt: Node, right: Node): BinaryExpression =>
+    new BinaryExpression('<', left.tree(), right.tree()),
+
+  CmpExp_eq: (left: Node, _lt: Node, right: Node): BinaryExpression =>
+    new BinaryExpression('=', left.tree(), right.tree()),
+
+  CmpExp_gt: (left: Node, _lt: Node, right: Node): BinaryExpression =>
+    new BinaryExpression('>', left.tree(), right.tree()),
+
   AddExp_plus: (left: Node, _pl: any, right: Node): BinaryExpression =>
     new BinaryExpression('+', left.tree(), right.tree()),
 

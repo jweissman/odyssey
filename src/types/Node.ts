@@ -1,6 +1,6 @@
 export type Node = {
   sourceString: string
-  derive: () => string
+  pretty: () => string
   tree: () => any
   eval: () => any
   children: Node[]

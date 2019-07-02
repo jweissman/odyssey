@@ -241,10 +241,13 @@ describe("Odyssey", () => {
       )).toEqual('13')
     });
 
-    xit('comparisons', () => {
+    it('comparisons', () => {
       expect(odyssey.evaluate('1<2')).toEqual('True')
+      expect(odyssey.evaluate('2<1')).toEqual('False')
       expect(odyssey.evaluate('1==2')).toEqual('False')
-      // expect(odyssey.evaluate('1>2')).toEqual('False')
+      expect(odyssey.evaluate('2==2')).toEqual('True')
+      expect(odyssey.evaluate('1>2')).toEqual('False')
+      expect(odyssey.evaluate('2>1')).toEqual('True')
     });
   });
 
