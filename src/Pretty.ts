@@ -11,6 +11,9 @@ const pretty = {
 
   num: (val: Node) => val.sourceString,
 
+  Ternary: (cond: Node, _q: Node, left: Node, _col: Node, right: Node) =>
+    [ cond.pretty(), "?", left.pretty(), ":", right.pretty() ].join(''),
+
   CmpExp_lt: (left: Node, _lt: Node, right: Node) =>
     [ left.pretty(), '<', right.pretty() ].join(''),
 

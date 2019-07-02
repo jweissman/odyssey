@@ -4,7 +4,7 @@ Odyssey {
 
   Stmt = Expr
 
-  Expr = Assignment | Defun | CmpExp
+  Expr = Assignment | Defun | Ternary | CmpExp
 
   Defun = FormalParameterList "=>" Expr
 
@@ -19,6 +19,8 @@ Odyssey {
   Parameter = ident
 
   Assignment = ident "=" Expr
+
+  Ternary = Expr "?" Expr ":" Expr
 
   CmpExp = AddExp ">" CmpExp -- gt
          | AddExp "<" CmpExp -- lt

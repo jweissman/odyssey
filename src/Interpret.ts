@@ -26,6 +26,9 @@ const interpret = {
   num: (val: Node) =>
     new OdysseyInteger(Number(val.sourceString)),
 
+  Ternary: (cond: Node, _q: Node, left: Node, _col: Node, right: Node) =>
+    cond.eval().flag ? left.eval() : right.eval(),
+
   CmpExp_lt: (left: Node, _lt: Node, right: Node) =>
     left.eval().isLessThan(right.eval()),
 

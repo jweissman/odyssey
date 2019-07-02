@@ -11,15 +11,22 @@ let logo: string = `
 \\____/ \\__,_/ \\__, //____//____/ \\___/ \\__, /  
              /____/                   /____/   
 `
-console.log(logo)
-console.log("Interactive Odyssey!");
 
-const repl = require('repl');
-repl.start({
-  prompt: "odyssey> ",
-  eval: (input: string, _ctx: any, _filename: any, cb: any) => {
-    const out = odyssey.interpret(input);
-    let [ derive, tree, value ] = out;
-    if (out) { cb(null, value) };
-  }
-})
+const args = process.argv.slice(2);
+if (args.length === 0) {
+  console.log(logo)
+  console.log("Interactive Odyssey!");
+  const repl = require('repl');
+  repl.start({
+    prompt: "odyssey> ",
+    eval: (input: string, _ctx: any, _filename: any, cb: any) => {
+      const out = odyssey.interpret(input);
+      let [ derive, tree, value ] = out;
+      if (out) { cb(null, value) };
+    }
+  })
+} else {
+  const fs = require('fs');
+  const contents = fs.readFileSync(args[0]).toString();
+  const result = odyssey.interpret(contents);
+}

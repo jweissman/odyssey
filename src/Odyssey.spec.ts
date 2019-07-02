@@ -249,6 +249,12 @@ describe("Odyssey", () => {
       expect(odyssey.evaluate('1>2')).toEqual('False')
       expect(odyssey.evaluate('2>1')).toEqual('True')
     });
+
+    it('ternaries', () => {
+      expect(odyssey.evaluate('2>1?1:0')).toEqual('1')
+      expect(odyssey.evaluate('2<1?1:0')).toEqual('0')
+    });
+
   });
 
 

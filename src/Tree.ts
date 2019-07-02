@@ -8,6 +8,7 @@ import {
   BinaryExpression,
   ParenthesizedExpression,
   NegatedExpression,
+  ConditionalExpression,
 } from './ASTNode';
 
 const tree = {
@@ -18,6 +19,10 @@ const tree = {
   num: (digits: Node) => new IntegerLiteral(
     Number(digits.sourceString)
   ),
+
+  //Ternary: (cond: Node, 
+  Ternary: (cond: Node, _q: Node, left: Node, _col: Node, right: Node) =>
+    new ConditionalExpression(cond, left, right),
 
   CmpExp_lt: (left: Node, _lt: Node, right: Node): BinaryExpression =>
     new BinaryExpression('<', left.tree(), right.tree()),

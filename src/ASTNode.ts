@@ -38,6 +38,16 @@ export class BinaryExpression extends ASTNode {
   }
 }
 
+export class ConditionalExpression extends ASTNode {
+  constructor(
+    public condition: ASTNode,
+    public left: ASTNode,
+    public right: ASTNode,
+  ) {
+    super()
+  }
+}
+
 export class AssignmentExpression extends ASTNode {
   constructor(
     public id: Identifier,
