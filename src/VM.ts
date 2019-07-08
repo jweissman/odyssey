@@ -1,7 +1,9 @@
 import { Node } from './types/node';
 
 export class OdysseyContext {
-  contexts: Array<{ [key: string]: any }> = [{}]
+  contexts: Array<{ [key: string]: any }> = [{
+    // print: new OdysseyFunction(),
+  }]
 
   get current() {
     return this.contexts[this.contexts.length-1];
@@ -77,7 +79,6 @@ export class OdysseyInteger {
     }
   }
 }
-
 
 export class OdysseyFunction {
   constructor(

@@ -8,6 +8,7 @@ const util = {
 import {
   OdysseyContext,
   OdysseyInteger,
+  OdysseyBool,
   OdysseyFunction
 } from './VM';
 
@@ -20,7 +21,8 @@ const environment = new OdysseyContext()
 const interpret = {
   Program: (stmts: Node) => {
     let results = stmts.eval();
-    return results[results.length-1];
+    let lastResult = results[results.length-1];
+    return lastResult; // || new OdysseyInteger(0);
   },
 
   num: (val: Node) =>
@@ -72,23 +74,31 @@ const interpret = {
     return new OdysseyFunction(paramNames, e, environment.copy());
   },
 
-  // call arbitrary function /////////
   Funcall: (id: Node, args: Node) => {
-    let fn = id.eval();
-    let theArgs = args.eval();
-    let argumentValues = util.zip(fn.paramList, theArgs);
-    environment.push(fn.context);
-    argumentValues.forEach(([key, val]: [string, any]) => {
-      environment.put(key, val);
-    });
-    let retVal = fn.methodBody.eval();
-    environment.pop();
-    return retVal;
+    let funName = id.sourceString;
+    if (funName === 'print') {
+      console.log(args.eval().map((arg: Node) => arg.pretty()));
+      return OdysseyBool.yes();
+    } else {
+      let fn = id.eval();
+      let theArgs = args.eval();
+      let argumentValues = util.zip(fn.paramList, theArgs);
+      let ctx = Object.assign({}, fn.context);
+      Object.assign(ctx, environment.current);
+      environment.push(ctx);
+      argumentValues.forEach(([key, val]: [string, any]) => {
+        environment.put(key, val);
+      });
+      let retVal = fn.methodBody.eval();
+      environment.pop();
+      return retVal;
+    }
   },
 
   ArgList: (_lp: any, args: Node, _rp: any) => args.eval(),
 
   EmptyListOf: (): Node[] => [],
+  emptyListOf: (): Node[] => [],
 
   NonemptyListOf: (eFirst: Node, _sep: any, eRest: Node) => {
     let result = [eFirst.eval(), ...eRest.eval()];

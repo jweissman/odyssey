@@ -43,6 +43,7 @@ Odyssey {
          | PriVal
   PriVal = Funcall | num | ident
 
+  // builtin = 'print'
   ident = letter alnum*
   num = digit+
 }

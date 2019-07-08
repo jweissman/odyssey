@@ -22,7 +22,7 @@ if (args.length === 0) {
     eval: (input: string, _ctx: any, _filename: any, cb: any) => {
       const out = odyssey.interpret(input);
       let [ derive, tree, value ] = out;
-      if (out) { cb(null, value) };
+      if (out && value) { cb(null, value) };
     }
   })
 } else {

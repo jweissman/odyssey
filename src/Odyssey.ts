@@ -2,6 +2,9 @@ import grammar from './Grammar';
 import semantics from './Semantics';
 
 export default class Odyssey {
+  constructor() {
+  }
+
   evaluate(str: string) {
     return this.interpret(str)[2];
   }
@@ -12,20 +15,15 @@ export default class Odyssey {
     if (m.succeeded()) {
       let s = semantics(m)
       let pretty = s.pretty();
-      //console.log("DERIVE: ", derive);
       let tree = s.tree();
-      //console.log("TREE: ", tree);
       let val = s.eval();
-      //console.log("VAL: ", val);
-      result = [
-        pretty,
-        tree,
-        val.pretty()
-      ];
+      if (val) {
+        result = [ pretty, tree, val.pretty() ];
+      }
     } else {
       console.error(m.message);
       throw new Error("Parse failure");
     }
-    return result;
+    return result || [,,];
   }
 }

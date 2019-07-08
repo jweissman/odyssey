@@ -61,6 +61,7 @@ const pretty = {
     ].join(''),
 
   EmptyListOf: () => '',
+  emptyListOf: () => '',
 
   NonemptyListOf: (eFirst: Node, _sep: any, eRest: Node) =>
     [eFirst.pretty(), ...eRest.pretty()],

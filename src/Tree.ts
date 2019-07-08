@@ -65,6 +65,7 @@ const tree = {
   FormalParameterList: (_lp: any, params: Node, _rp: any) => params.tree(),
 
   EmptyListOf: (): Node[] => [],
+  emptyListOf: (): Node[] => [],
 
   NonemptyListOf: (eFirst: Node, _sep: any, eRest: Node) =>
     [eFirst.tree(), ...eRest.tree()],

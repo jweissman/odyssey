@@ -225,6 +225,16 @@ describe("Odyssey", () => {
       expect(odyssey.evaluate("inc(30)")).toEqual('31')
     });
 
+    it('defines recursive functions', () => {
+      odyssey.evaluate("fib=(n)=>n>1?fib(n-1)+fib(n-2):1");
+      expect(odyssey.evaluate("fib(0)")).toEqual('1')
+      expect(odyssey.evaluate("fib(1)")).toEqual('1')
+      expect(odyssey.evaluate("fib(2)")).toEqual('2')
+      expect(odyssey.evaluate("fib(3)")).toEqual('3')
+      expect(odyssey.evaluate("fib(4)")).toEqual('5')
+      expect(odyssey.evaluate("fib(5)")).toEqual('8')
+    });
+
     test.todo('multi-line fns');
     test.todo('omit parens around funcall args');
     test.todo('omit parens around defun params');
@@ -255,6 +265,13 @@ describe("Odyssey", () => {
       expect(odyssey.evaluate('2<1?1:0')).toEqual('0')
     });
 
+  });
+
+  describe('builtins', () => {
+    it('prints', () => {
+      //jest.spyOn(odyssey.
+      expect(odyssey.evaluate('print(1, 3>2)')).toEqual('True')
+    });
   });
 
 
