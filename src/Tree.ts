@@ -1,4 +1,5 @@
 import { Node } from './types/node';
+
 import {
   Identifier,
   IntegerLiteral,
@@ -9,6 +10,8 @@ import {
   ParenthesizedExpression,
   NegatedExpression,
   ConditionalExpression,
+  ArrayLiteralExpression,
+  ArrayLookupExpression,
 } from './ASTNode';
 
 const tree = {
@@ -20,7 +23,12 @@ const tree = {
     Number(digits.sourceString)
   ),
 
-  //Ternary: (cond: Node, 
+  ArrayLit: (_lb: Node, elems: Node, _rb: Node) =>
+    new ArrayLiteralExpression(elems.tree()),
+
+  ArrayIndex: (arr: Node, _lb: Node, idx: Node, _rb: Node) =>
+    new ArrayLookupExpression(arr.tree(), idx.tree().value), //tree().value),
+
   Ternary: (cond: Node, _q: Node, left: Node, _col: Node, right: Node) =>
     new ConditionalExpression(cond, left, right),
 

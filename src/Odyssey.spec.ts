@@ -265,6 +265,23 @@ describe("Odyssey", () => {
       expect(odyssey.evaluate('2<1?1:0')).toEqual('0')
     });
 
+    it("array literals", () => {
+      expect(odyssey.evaluate('a=[1,2,3]')).toEqual('[1,2,3]')
+      expect(odyssey.evaluate('a[1]')).toEqual('2')
+      expect(odyssey.evaluate('a[1]=4')).toEqual('4')
+      expect(odyssey.evaluate('a')).toEqual('[1,4,3]')
+    });
+
+    it("multidim array literals", () => {
+      expect(odyssey.evaluate('a=[1,2,[3,4,5]]')).toEqual('[1,2,[3,4,5]]')
+      expect(odyssey.evaluate('a[1]')).toEqual('2')
+      expect(odyssey.evaluate('a[1]=4')).toEqual('4')
+      expect(odyssey.evaluate('a')).toEqual('[1,4,[3,4,5]]')
+      expect(odyssey.evaluate('a[2]')).toEqual('[3,4,5]')
+      expect(odyssey.evaluate('a[2][2]')).toEqual('5')
+    });
+
+    test.todo("string literal");
   });
 
   describe('builtins', () => {
@@ -273,7 +290,6 @@ describe("Odyssey", () => {
       expect(odyssey.evaluate('print(1, 3>2)')).toEqual('True')
     });
   });
-
 
   test.todo('modules');
   test.todo('classes');

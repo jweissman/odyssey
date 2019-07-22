@@ -1,10 +1,9 @@
 Odyssey {
   Program = listOf<Stmt, br> 
-  br = ";" | "\n" | "\r"
 
   Stmt = Expr
 
-  Expr = Assignment | Defun | Ternary | CmpExp
+  Expr = Defun | Ternary | Assignment | CmpExp
 
   Defun = FormalParameterList "=>" Expr
 
@@ -18,7 +17,7 @@ Odyssey {
 
   Parameter = ident
 
-  Assignment = ident "=" Expr
+  Assignment = (ArrayIndex | ident) "=" Expr
 
   Ternary = Expr "?" Expr ":" Expr
 
@@ -41,9 +40,16 @@ Odyssey {
   PriExp = "(" Expr ")" -- parens
          | "-" PriExp -- neg
          | PriVal
-  PriVal = Funcall | num | ident
+
+  PriVal = Funcall | ArrayLit | ArrayIndex | num | ident
+
+  ArrayIndex = (ArrayIndex | ident) "[" Expr "]"
+
+  ArrayLit = "[" ListOf<Expr, ","> "]"
 
   // builtin = 'print'
   ident = letter alnum*
   num = digit+
+
+  br = ";" | "\n" | "\r"
 }

@@ -9,8 +9,24 @@ import {
   OdysseyContext,
   OdysseyInteger,
   OdysseyBool,
-  OdysseyFunction
+  OdysseyFunction,
+  OdysseyCollection,
 } from './VM';
+
+import {
+  //Identifier,
+  //IntegerLiteral,
+  //AssignmentExpression,
+  //DefunExpression,
+  //FuncallExpression,
+  //BinaryExpression,
+  //ParenthesizedExpression,
+  //NegatedExpression,
+  //ConditionalExpression,
+  //ArrayLiteralExpression,
+  ArrayLookupExpression,
+} from './ASTNode';
+
 
 
 const environment = new OdysseyContext()
@@ -23,6 +39,23 @@ const interpret = {
     let results = stmts.eval();
     let lastResult = results[results.length-1];
     return lastResult; // || new OdysseyInteger(0);
+  },
+
+  ArrayLit: (_lbrack: Node, elems: Node, _rbrack: Node) =>
+    new OdysseyCollection(elems.eval()),
+
+  ArrayIndex: (arr: Node, _lb: Node, idx: Node, _rb: Node) => {
+    let theArray = arr.eval();
+    if (theArray instanceof OdysseyCollection) {
+      let theIndex = idx.eval();
+      if (theIndex instanceof OdysseyInteger) {
+        return theArray.at(theIndex.value);
+      } else {
+        throw new Error("Array indices should be integral, got: " + theIndex.pretty());
+      }
+    } else {
+      throw new Error("Can't index into non-array: " + theArray.pretty());
+    }
   },
 
   num: (val: Node) =>
@@ -66,8 +99,17 @@ const interpret = {
     return environment.retrieve(key);
   },
 
-  Assignment: (id: Node, _eq: any, e: Node) =>
-    environment.put(id.sourceString, e.eval()),
+  Assignment: (id: Node, _eq: any, e: Node) => {
+    let ident = id.tree();
+    let val = e.eval();
+    if (ident instanceof ArrayLookupExpression) {
+      let theArray = environment.retrieve(ident.array.value);
+      let idx = ident.index;
+      return theArray.put(val, idx)
+    } else {
+      return environment.put(id.sourceString, val);
+    }
+  },
 
   Defun: (params: Node, _fa: any, e: Node) => {
     let paramNames = params.tree().map((id: Identifier) => id.value)
@@ -107,7 +149,6 @@ const interpret = {
 
   nonemptyListOf: (eFirst: Node, _sep: any, eRest: Node) => {
     let result = [eFirst.eval(), ...eRest.eval()];
-    //debugger;
     return result;
   },
 };

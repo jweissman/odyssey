@@ -1,2 +1,2 @@
-fib = (n) =>(n > 1)?fib(n-1)+fib(n-2):1;
-print(fib(1), fib(2), fib(3), fib(4))
+fib=(n)=>(n>1)?fib(n-1)+fib(n-2):1;
+print(fib(1), fib(2), fib(3), fib(4), fib(5), fib(6))

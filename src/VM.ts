@@ -34,6 +34,8 @@ export class OdysseyContext {
   copy = () => Object.assign({}, this.current)
 }
 
+// class OdysseyValue {}
+
 export class OdysseyBool {
   static yes = () => new OdysseyBool(true);
   static no = () => new OdysseyBool(false);
@@ -99,3 +101,27 @@ export class OdysseyFunction {
   }
 }
 
+class OdysseyNull {
+  public static instance = new OdysseyNull();
+  constructor() {}
+  pretty() { return '(null)' }
+}
+
+export class OdysseyCollection {
+  constructor(
+    public elements: Array<OdysseyInteger>
+  ) {}
+
+  at(index: number) {
+    return this.elements[index] || OdysseyNull.instance;
+  }
+
+  put(value: OdysseyInteger, index: number) {
+    this.elements[index] = value;
+    return value;
+  }
+
+  pretty = () => {
+    return "[" + this.elements.map(e => e.pretty()).join(',') + "]";
+  }
+}

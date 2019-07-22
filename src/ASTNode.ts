@@ -74,3 +74,20 @@ export class FuncallExpression extends ASTNode {
     super()
   }
 }
+
+export class ArrayLiteralExpression extends ASTNode {
+  constructor(
+    public elems: Array<ASTNode> = []
+  ) {
+    super();
+  }
+}
+
+export class ArrayLookupExpression extends ASTNode {
+  constructor(
+    public array: Identifier,
+    public index: number,
+  ) {
+    super();
+  }
+}

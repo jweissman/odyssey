@@ -1,15 +1,20 @@
 import { Node } from './types/node';
 
-// const join = (...elems) => elems.join('')
-
 const pretty = {
-  Program: (stmts: Node) => //, _delims: Node) =>
-    stmts.children.map((stmt: Node) => stmt.pretty()).join(';'),
+  Program: (stmts: Node) => stmts.children.map(
+    (stmt: Node) => stmt.pretty()
+  ).join(';'),
 
   ident: (leadingChar: Node, rest: Node) =>
     [leadingChar.sourceString, rest.sourceString].join(''),
 
   num: (val: Node) => val.sourceString,
+
+  ArrayLit: (_lbrack: Node, elems: Node, _rbrack: Node) =>
+    [ "[", elems.pretty(), "]" ].join(''),
+
+  ArrayIndex: (arrayName: Node, _lb: Node, index: Node, _rb: Node) =>
+    [ arrayName.pretty(), "[", index.pretty(), "]" ],
 
   Ternary: (cond: Node, _q: Node, left: Node, _col: Node, right: Node) =>
     [ cond.pretty(), "?", left.pretty(), ":", right.pretty() ].join(''),
