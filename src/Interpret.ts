@@ -11,6 +11,7 @@ import {
   OdysseyBool,
   OdysseyFunction,
   OdysseyCollection,
+  OdysseyString,
 } from './VM';
 
 import {
@@ -40,6 +41,9 @@ const interpret = {
     let lastResult = results[results.length-1];
     return lastResult; // || new OdysseyInteger(0);
   },
+
+  StringLit: (_lq: Node, content: Node, _rq: Node) =>
+    new OdysseyString(content.sourceString),
 
   ArrayLit: (_lbrack: Node, elems: Node, _rbrack: Node) =>
     new OdysseyCollection(elems.eval()),

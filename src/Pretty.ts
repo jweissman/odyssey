@@ -10,6 +10,9 @@ const pretty = {
 
   num: (val: Node) => val.sourceString,
 
+  StringLit: (_lq: Node, content: Node, _rq: Node) =>
+    [ "'", content.sourceString, "'" ],
+
   ArrayLit: (_lbrack: Node, elems: Node, _rbrack: Node) =>
     [ "[", elems.pretty(), "]" ].join(''),
 

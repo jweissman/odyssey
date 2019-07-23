@@ -41,11 +41,13 @@ Odyssey {
          | "-" PriExp -- neg
          | PriVal
 
-  PriVal = Funcall | ArrayLit | ArrayIndex | num | ident
+  PriVal = Funcall | ArrayLit | ArrayIndex | StringLit | num | ident
 
   ArrayIndex = (ArrayIndex | ident) "[" Expr "]"
 
   ArrayLit = "[" ListOf<Expr, ","> "]"
+
+  StringLit = "\"" #(~"\"" any)* "\""
 
   // builtin = 'print'
   ident = letter alnum*

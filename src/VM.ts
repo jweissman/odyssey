@@ -34,8 +34,6 @@ export class OdysseyContext {
   copy = () => Object.assign({}, this.current)
 }
 
-// class OdysseyValue {}
-
 export class OdysseyBool {
   static yes = () => new OdysseyBool(true);
   static no = () => new OdysseyBool(false);
@@ -80,6 +78,8 @@ export class OdysseyInteger {
       return 0;
     }
   }
+
+  asOdysseyString() { return new OdysseyString(String(this.value)); }
 }
 
 export class OdysseyFunction {
@@ -124,4 +124,18 @@ export class OdysseyCollection {
   pretty = () => {
     return "[" + this.elements.map(e => e.pretty()).join(',') + "]";
   }
+}
+
+export class OdysseyString {
+  constructor(
+    public content: string
+  ) {}
+
+  pretty = () => {
+    return `"${this.content}"`;
+  }
+
+  plus(other: OdysseyString)  { return new OdysseyString(this.content + other.asOdysseyString().content); }
+
+  asOdysseyString() { return this; }
 }

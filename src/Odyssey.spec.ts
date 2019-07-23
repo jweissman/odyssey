@@ -281,7 +281,11 @@ describe("Odyssey", () => {
       expect(odyssey.evaluate('a[2][2]')).toEqual('5')
     });
 
-    test.todo("string literal");
+    it("string literal", () => {
+      expect(odyssey.evaluate('greeting="hello"')).toEqual('"hello"');
+      expect(odyssey.evaluate('greeting + "world"')).toEqual('"helloworld"');
+      expect(odyssey.evaluate('greeting + 123')).toEqual('"hello123"');
+    });
   });
 
   describe('builtins', () => {

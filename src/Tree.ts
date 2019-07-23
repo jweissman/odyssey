@@ -12,6 +12,7 @@ import {
   ConditionalExpression,
   ArrayLiteralExpression,
   ArrayLookupExpression,
+  StringLiteralExpression,
 } from './ASTNode';
 
 const tree = {
@@ -22,6 +23,9 @@ const tree = {
   num: (digits: Node) => new IntegerLiteral(
     Number(digits.sourceString)
   ),
+
+  StringLit: (_lq: Node, content: Node, _rq: Node) =>
+    new StringLiteralExpression(content.sourceString),
 
   ArrayLit: (_lb: Node, elems: Node, _rb: Node) =>
     new ArrayLiteralExpression(elems.tree()),

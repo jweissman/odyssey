@@ -91,3 +91,11 @@ export class ArrayLookupExpression extends ASTNode {
     super();
   }
 }
+
+export class StringLiteralExpression extends ASTNode {
+  constructor(
+    public value: string
+  ) {
+    super();
+  }
+}
