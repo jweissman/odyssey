@@ -50,7 +50,7 @@ Odyssey {
   HashLit = "{" ListOf<KeyValuePair, ","> "}"
   KeyValuePair = ident ":" Expr
 
-  DotAccess = ident "." ident
+  DotAccess = (DotAccess | ident) "." ident
 
   StringLit = "\"" #(~"\"" any)* "\""
 

@@ -294,6 +294,12 @@ describe("Odyssey", () => {
       expect(odyssey.evaluate('h.b = "good"')).toEqual('"good"');
       expect(odyssey.evaluate('h')).toEqual('{a:1, b:"good"}');
     });
+
+    it('nested hashception', () => {
+      expect(odyssey.evaluate('h={a:1,b:"okay"}')).toEqual('{a:1, b:"okay"}');
+      expect(odyssey.evaluate('g={inner:h}')).toEqual('{inner:{a:1, b:"okay"}}');
+      expect(odyssey.evaluate('g.inner.a')).toEqual('1');
+    });
   });
 
   describe('builtins', () => {
