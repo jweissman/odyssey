@@ -6,26 +6,19 @@ const util = {
 }
 
 import {
+  OdysseyValue,
   OdysseyContext,
   OdysseyInteger,
   OdysseyBool,
   OdysseyFunction,
   OdysseyCollection,
   OdysseyString,
+  OdysseyHash,
 } from './VM';
 
 import {
-  //Identifier,
-  //IntegerLiteral,
-  //AssignmentExpression,
-  //DefunExpression,
-  //FuncallExpression,
-  //BinaryExpression,
-  //ParenthesizedExpression,
-  //NegatedExpression,
-  //ConditionalExpression,
-  //ArrayLiteralExpression,
   ArrayLookupExpression,
+  DotAccessExpression,
 } from './ASTNode';
 
 
@@ -47,6 +40,30 @@ const interpret = {
 
   ArrayLit: (_lbrack: Node, elems: Node, _rbrack: Node) =>
     new OdysseyCollection(elems.eval()),
+
+  HashLit: (_lcurly: Node, kvs: Node, _rcurly: Node) => {
+    let keyValList = kvs.eval();
+    let hash = keyValList.reduce((acc: any,[k,v]: [string, OdysseyValue]) => { acc[k]=v; return acc; }, {});
+    return new OdysseyHash(hash)
+  },
+
+  KeyValuePair: (key: Node, _col: Node, val: Node) => {
+    let k = key.tree().value;
+    let v = val.eval();
+    return [k,v];
+  },
+
+  DotAccess: (obj: Node, _dot: Node, attr: Node) => {
+    let theObject = obj.eval();
+    if (theObject instanceof OdysseyHash) {
+      let theAttribute = attr.tree();
+      if (theAttribute instanceof Identifier) {
+        return theObject.get(theAttribute.value);
+      }
+    } else {
+      throw new Error("Cannot dot access non-hash: " + theObject.pretty());
+    }
+  },
 
   ArrayIndex: (arr: Node, _lb: Node, idx: Node, _rb: Node) => {
     let theArray = arr.eval();
@@ -107,9 +124,13 @@ const interpret = {
     let ident = id.tree();
     let val = e.eval();
     if (ident instanceof ArrayLookupExpression) {
-      let theArray = environment.retrieve(ident.array.value);
+      let theArray: any = environment.retrieve(ident.array.value);
       let idx = ident.index;
-      return theArray.put(val, idx)
+      return theArray.put(val, idx);
+    } else if (ident instanceof DotAccessExpression) {
+      let theObject: any = environment.retrieve(ident.obj.value);
+      let attr = ident.attr.value;
+      return theObject.set(attr, val);
     } else {
       return environment.put(id.sourceString, val);
     }

@@ -286,11 +286,18 @@ describe("Odyssey", () => {
       expect(odyssey.evaluate('greeting + "world"')).toEqual('"helloworld"');
       expect(odyssey.evaluate('greeting + 123')).toEqual('"hello123"');
     });
+
+    it('hash literal', () => {
+      expect(odyssey.evaluate('h={a:1,b:"okay"}')).toEqual('{a:1, b:"okay"}');
+      expect(odyssey.evaluate('h.a')).toEqual('1');
+      expect(odyssey.evaluate('h.b')).toEqual('"okay"');
+      expect(odyssey.evaluate('h.b = "good"')).toEqual('"good"');
+      expect(odyssey.evaluate('h')).toEqual('{a:1, b:"good"}');
+    });
   });
 
   describe('builtins', () => {
     it('prints', () => {
-      //jest.spyOn(odyssey.
       expect(odyssey.evaluate('print(1, 3>2)')).toEqual('True')
     });
   });

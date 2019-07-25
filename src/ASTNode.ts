@@ -99,3 +99,29 @@ export class StringLiteralExpression extends ASTNode {
     super();
   }
 }
+
+export class KeyValueExpression extends ASTNode {
+  constructor(
+    public key: string,
+    public value: ASTNode
+  ) {
+    super();
+  }
+}
+
+export class HashLiteralExpression extends ASTNode {
+  constructor(
+    public keyValues: Array<KeyValueExpression>
+  ) {
+    super();
+  }
+}
+
+export class DotAccessExpression extends ASTNode {
+  constructor(
+    public obj: Identifier,
+    public attr: Identifier
+  ) {
+    super();
+  }
+}

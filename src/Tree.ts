@@ -13,6 +13,9 @@ import {
   ArrayLiteralExpression,
   ArrayLookupExpression,
   StringLiteralExpression,
+  HashLiteralExpression,
+  KeyValueExpression,
+  DotAccessExpression,
 } from './ASTNode';
 
 const tree = {
@@ -31,7 +34,16 @@ const tree = {
     new ArrayLiteralExpression(elems.tree()),
 
   ArrayIndex: (arr: Node, _lb: Node, idx: Node, _rb: Node) =>
-    new ArrayLookupExpression(arr.tree(), idx.tree().value), //tree().value),
+    new ArrayLookupExpression(arr.tree(), idx.tree().value),
+
+  HashLit: (_lc: Node, kvs: Node, _rc: Node) =>
+    new HashLiteralExpression(kvs.tree()),
+
+  KeyValuePair: (key: Node, _col: Node, val: Node) =>
+    new KeyValueExpression(key.tree(), val.tree()),
+
+  DotAccess: (obj: Node, _dot: Node, attr: Node) =>
+    new DotAccessExpression(obj.tree(), attr.tree()),
 
   Ternary: (cond: Node, _q: Node, left: Node, _col: Node, right: Node) =>
     new ConditionalExpression(cond, left, right),

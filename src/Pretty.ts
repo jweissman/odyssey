@@ -19,6 +19,16 @@ const pretty = {
   ArrayIndex: (arrayName: Node, _lb: Node, index: Node, _rb: Node) =>
     [ arrayName.pretty(), "[", index.pretty(), "]" ],
 
+  HashLit: (_lcurly: Node, kvs: Node, _rcurly: Node) =>
+    [ "{", kvs.pretty(), "}" ].join(''),
+
+  KeyValuePair: (key: Node, _col: Node, val: Node) =>
+    [ key.pretty(), ":", val.pretty() ].join(' '),
+
+  DotAccess: (obj: Node, _dot: Node, attr: Node) =>
+    [ obj.pretty(), ".", attr.pretty() ].join(''),
+
+
   Ternary: (cond: Node, _q: Node, left: Node, _col: Node, right: Node) =>
     [ cond.pretty(), "?", left.pretty(), ":", right.pretty() ].join(''),
 

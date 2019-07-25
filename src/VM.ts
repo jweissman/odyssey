@@ -1,8 +1,11 @@
 import { Node } from './types/node';
 
+export interface OdysseyValue {
+  pretty(): String;
+}
+
 export class OdysseyContext {
-  contexts: Array<{ [key: string]: any }> = [{
-    // print: new OdysseyFunction(),
+  contexts: Array<{ [key: string]: OdysseyValue }> = [{
   }]
 
   get current() {
@@ -34,14 +37,14 @@ export class OdysseyContext {
   copy = () => Object.assign({}, this.current)
 }
 
-export class OdysseyBool {
+export class OdysseyBool implements OdysseyValue {
   static yes = () => new OdysseyBool(true);
   static no = () => new OdysseyBool(false);
   constructor(public flag: boolean) {}
   pretty = () => this.flag ? 'True' : 'False';
 }
 
-export class OdysseyInteger {
+export class OdysseyInteger implements OdysseyValue {
   constructor(public value: number) {}
   pretty = () => this.value.toString();
   plus(other: OdysseyInteger)  { return new OdysseyInteger(this.value + other.value); }
@@ -82,7 +85,7 @@ export class OdysseyInteger {
   asOdysseyString() { return new OdysseyString(String(this.value)); }
 }
 
-export class OdysseyFunction {
+export class OdysseyFunction implements OdysseyValue {
   constructor(
     public paramList: Array<String>,
     public methodBody: Node,
@@ -101,13 +104,14 @@ export class OdysseyFunction {
   }
 }
 
-class OdysseyNull {
+class OdysseyNull implements OdysseyValue {
   public static instance = new OdysseyNull();
   constructor() {}
   pretty() { return '(null)' }
 }
 
-export class OdysseyCollection {
+//export class OdysseyCollection {
+export class OdysseyCollection implements OdysseyValue {
   constructor(
     public elements: Array<OdysseyInteger>
   ) {}
@@ -126,7 +130,7 @@ export class OdysseyCollection {
   }
 }
 
-export class OdysseyString {
+export class OdysseyString implements OdysseyValue {
   constructor(
     public content: string
   ) {}
@@ -138,4 +142,30 @@ export class OdysseyString {
   plus(other: OdysseyString)  { return new OdysseyString(this.content + other.asOdysseyString().content); }
 
   asOdysseyString() { return this; }
+}
+
+export class OdysseyHash implements OdysseyValue {
+  constructor(
+    public keyValues: {[key: string]: OdysseyValue}
+  ) {}
+
+  pretty = () => {
+    let entries = Object.entries(this.keyValues)
+    return [
+      "{",
+      entries.map(([k,v]: [string, OdysseyValue]) =>
+        `${k}:${v.pretty()}`
+      ).join(', '),
+      "}",
+    ].join('')
+  }
+
+  get(key: string) {
+    return this.keyValues[key];
+  }
+
+  set(key: string, val: OdysseyValue) {
+    this.keyValues[key] = val;
+    return val;
+  }
 }

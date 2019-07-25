@@ -17,7 +17,7 @@ Odyssey {
 
   Parameter = ident
 
-  Assignment = (ArrayIndex | ident) "=" Expr
+  Assignment = (ArrayIndex | DotAccess | ident) "=" Expr
 
   Ternary = Expr "?" Expr ":" Expr
 
@@ -41,11 +41,16 @@ Odyssey {
          | "-" PriExp -- neg
          | PriVal
 
-  PriVal = Funcall | ArrayLit | ArrayIndex | StringLit | num | ident
+  PriVal = Funcall | ArrayLit | ArrayIndex | StringLit | HashLit | DotAccess | num | ident
 
   ArrayIndex = (ArrayIndex | ident) "[" Expr "]"
 
   ArrayLit = "[" ListOf<Expr, ","> "]"
+
+  HashLit = "{" ListOf<KeyValuePair, ","> "}"
+  KeyValuePair = ident ":" Expr
+
+  DotAccess = ident "." ident
 
   StringLit = "\"" #(~"\"" any)* "\""
 
