@@ -5,7 +5,9 @@ Odyssey {
 
   Expr = Defun | Ternary | Assignment | FuncallLambda | CmpExp
 
-  Defun = FormalParameterList "=>" Expr
+  Defun = FormalParameterList "=>" (Block | Expr)
+
+  Block = "{" Program "}"
 
   FormalParameterList =
     "(" ListOf<Parameter, ","> ")"
@@ -15,10 +17,7 @@ Odyssey {
   FuncallLambda = (DotAccess | ident) #" " (~#br nonemptyListOf<Expr, ",">)
 
   ArgList =
-    "(" ArgElements ")"
-
-  ArgElements =
-    ListOf<Expr, ",">
+    "(" ListOf<Expr, ","> ")"
 
   Parameter = ident
 

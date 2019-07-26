@@ -56,6 +56,8 @@ const interpret = {
     return lastResult; // || new OdysseyInteger(0);
   },
 
+  Block: (_lb: Node, prog: Node, _rb: Node) => prog.eval(),
+
   StringLit: (_lq: Node, content: Node, _rq: Node) =>
   new OdysseyString(content.sourceString),
 

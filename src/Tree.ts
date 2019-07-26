@@ -16,9 +16,14 @@ import {
   HashLiteralExpression,
   KeyValueExpression,
   DotAccessExpression,
+  BlockExpression,
 } from './ASTNode';
 
 const tree = {
+  Block: (_lb: Node, prog: Node, _rb: Node) => new BlockExpression(
+    prog.tree()
+  ),
+
   ident: (head: Node, rest: Node) => new Identifier(
     [head.sourceString, rest.sourceString].join('')
   ),
@@ -102,7 +107,6 @@ const tree = {
 
   FuncallLambda: (id: Node, _spc: Node, args: Node) =>
     new FuncallExpression(id.tree(), args.tree()),
-
 
   ArgList: (_lp: any, args: Node, _rp: any) => args.tree(),
 

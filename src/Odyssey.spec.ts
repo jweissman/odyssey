@@ -136,7 +136,7 @@ describe("Odyssey", () => {
   describe('functions', () => {
     it('defines functions', () => {
       expect(odyssey.interpret("f=()=>3")).toEqual([
-        "f=()=>{3}",
+        "f=()=>3",
         [new AssignmentExpression(
           new Identifier('f'),
           new DefunExpression([], new IntegerLiteral(3))
@@ -159,7 +159,7 @@ describe("Odyssey", () => {
       );
 
       expect(odyssey.interpret("double=(x)=>x*2")).toEqual([
-        "double=(x)=>{x*2}",
+        "double=(x)=>x*2",
         [tree],
         "(x)=>{x*2}",
       ]);
@@ -302,10 +302,13 @@ describe("Odyssey", () => {
     });
 
     it('lambda funcalls', () => {
-      // fun call
       expect(odyssey.evaluate("add=(x,y)=>x+y")).toEqual('(x, y)=>{x+y}')
       expect(odyssey.evaluate("add 2,2")).toEqual('4')
-      //expect(odyssey.evaluate("print 'hello'")).toEqual('True')
+    });
+
+    it('defun with block', () => {
+      expect(odyssey.evaluate("add=(x,y)=>{x+y}")).toEqual('(x, y)=>{x+y}')
+      expect(odyssey.evaluate("add 2,2")).toEqual('4')
     });
   });
 

@@ -5,6 +5,13 @@ const pretty = {
     (stmt: Node) => stmt.pretty()
   ).join(';'),
 
+  Block: (_lb: Node, program: Node, _rb: Node) => [
+    //"{",
+    program.pretty(),
+    //stmts.children.map((stmt: Node) => stmt.pretty()).join(';'),
+    //"}"
+  ].join(''),
+
   ident: (leadingChar: Node, rest: Node) =>
     [leadingChar.sourceString, rest.sourceString].join(''),
 
@@ -67,7 +74,7 @@ const pretty = {
 
   Defun: (params: Node, _fa: any, e: Node) =>
     [
-      params.pretty(), "=>", "{", e.pretty(), "}"
+      params.pretty(), "=>", e.pretty()
     ].join(''),
 
   FormalParameterList: (_lp: any, params: Node, _rp: any) =>

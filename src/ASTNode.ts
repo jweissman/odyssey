@@ -125,3 +125,11 @@ export class DotAccessExpression extends ASTNode {
     super();
   }
 }
+
+export class BlockExpression extends ASTNode {
+  constructor(
+    public program: ASTNode,
+  ) {
+    super();
+  }
+}
