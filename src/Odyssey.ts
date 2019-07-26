@@ -18,7 +18,6 @@ export default class Odyssey {
       let tree = s.tree();
       let val = s.eval();
       if (val) {
-        //console.log("VALUE", val);
         result = [ pretty, tree, val.pretty() ];
       }
     } else {

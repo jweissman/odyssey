@@ -300,6 +300,13 @@ describe("Odyssey", () => {
       expect(odyssey.evaluate('g={inner:h}')).toEqual('{inner:{a:1, b:"okay"}}');
       expect(odyssey.evaluate('g.inner.a')).toEqual('1');
     });
+
+    it('lambda funcalls', () => {
+      // fun call
+      expect(odyssey.evaluate("add=(x,y)=>x+y")).toEqual('(x, y)=>{x+y}')
+      expect(odyssey.evaluate("add 2,2")).toEqual('4')
+      //expect(odyssey.evaluate("print 'hello'")).toEqual('True')
+    });
   });
 
   describe('builtins', () => {

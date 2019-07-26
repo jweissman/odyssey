@@ -93,6 +93,12 @@ const pretty = {
       args.pretty(),
     ].join(''),
 
+  FuncallLambda: (id: Node, _spc: Node, args: Node) =>
+    [
+      id.pretty(),
+      args.pretty(),
+    ].join(''),
+
   ArgList: (_lp: any, args: Node, _rp: any) =>
     [
       "(",

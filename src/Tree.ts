@@ -100,6 +100,10 @@ const tree = {
   Funcall: (id: Node, args: Node) =>
     new FuncallExpression(id.tree(), args.tree()),
 
+  FuncallLambda: (id: Node, _spc: Node, args: Node) =>
+    new FuncallExpression(id.tree(), args.tree()),
+
+
   ArgList: (_lp: any, args: Node, _rp: any) => args.tree(),
 
 }

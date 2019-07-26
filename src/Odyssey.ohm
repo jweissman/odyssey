@@ -3,7 +3,7 @@ Odyssey {
 
   Stmt = Expr
 
-  Expr = Defun | Ternary | Assignment | CmpExp
+  Expr = Defun | Ternary | Assignment | FuncallLambda | CmpExp
 
   Defun = FormalParameterList "=>" Expr
 
@@ -12,8 +12,13 @@ Odyssey {
 
   Funcall = ident ArgList
 
+  FuncallLambda = (DotAccess | ident) #" " (~#br nonemptyListOf<Expr, ",">)
+
   ArgList =
-    "(" ListOf<Expr, ","> ")"
+    "(" ArgElements ")"
+
+  ArgElements =
+    ListOf<Expr, ",">
 
   Parameter = ident
 

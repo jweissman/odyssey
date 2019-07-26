@@ -3,7 +3,7 @@ import { Identifier } from './ASTNode';
 
 const util = {
   zip: (arr: Array<any>, other: Array<any>) => arr.map((e,i) => [e,other[i]]),
-}
+};
 
 import {
   OdysseyValue,
@@ -22,8 +22,29 @@ import {
 } from './ASTNode';
 
 
-
 const environment = new OdysseyContext()
+
+const funcall = (id: Node, args: Node) => {
+  let funName = id.sourceString;
+  if (funName === 'print') {
+    console.log(args.eval().map((arg: Node) => arg.pretty()));
+    return OdysseyBool.yes();
+  } else {
+    let fn = id.eval();
+    let theArgs = args.eval();
+    debugger;
+    let argumentValues = util.zip(fn.paramList, theArgs);
+    let ctx = Object.assign({}, fn.context);
+    Object.assign(ctx, environment.current);
+    environment.push(ctx);
+    argumentValues.forEach(([key, val]: [string, any]) => {
+      environment.put(key, val);
+    });
+    let retVal = fn.methodBody.eval();
+    environment.pop();
+    return retVal;
+  }
+};
 
 /**
  * evaluation
@@ -36,10 +57,10 @@ const interpret = {
   },
 
   StringLit: (_lq: Node, content: Node, _rq: Node) =>
-    new OdysseyString(content.sourceString),
+  new OdysseyString(content.sourceString),
 
   ArrayLit: (_lbrack: Node, elems: Node, _rbrack: Node) =>
-    new OdysseyCollection(elems.eval()),
+  new OdysseyCollection(elems.eval()),
 
   HashLit: (_lcurly: Node, kvs: Node, _rcurly: Node) => {
     let keyValList = kvs.eval();
@@ -141,26 +162,8 @@ const interpret = {
     return new OdysseyFunction(paramNames, e, environment.copy());
   },
 
-  Funcall: (id: Node, args: Node) => {
-    let funName = id.sourceString;
-    if (funName === 'print') {
-      console.log(args.eval().map((arg: Node) => arg.pretty()));
-      return OdysseyBool.yes();
-    } else {
-      let fn = id.eval();
-      let theArgs = args.eval();
-      let argumentValues = util.zip(fn.paramList, theArgs);
-      let ctx = Object.assign({}, fn.context);
-      Object.assign(ctx, environment.current);
-      environment.push(ctx);
-      argumentValues.forEach(([key, val]: [string, any]) => {
-        environment.put(key, val);
-      });
-      let retVal = fn.methodBody.eval();
-      environment.pop();
-      return retVal;
-    }
-  },
+  Funcall: (id: Node, args: Node) => funcall(id, args),
+  FuncallLambda: (id: Node, _spc: Node, args: Node) => funcall(id, args),
 
   ArgList: (_lp: any, args: Node, _rp: any) => args.eval(),
 
