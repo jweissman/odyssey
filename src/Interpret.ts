@@ -27,12 +27,19 @@ const environment = new OdysseyContext()
 const funcall = (id: Node, args: Node) => {
   let funName = id.sourceString;
   if (funName === 'print') {
-    console.log(args.eval().map((arg: Node) => arg.pretty()));
+    console.log(args.eval().map((arg: OdysseyValue) => arg.pretty()));
     return OdysseyBool.yes();
+  } else if (funName === 'assert') {
+    args.eval().forEach((arg: OdysseyBool, idx: number) => {
+      if (!arg.flag) {
+        throw new Error("Assertion failed: " + args.children[idx].pretty());
+      }
+    })
+    return OdysseyBool.yes()
   } else {
     let fn = id.eval();
     let theArgs = args.eval();
-    debugger;
+    //debugger;
     let argumentValues = util.zip(fn.paramList, theArgs);
     let ctx = Object.assign({}, fn.context);
     Object.assign(ctx, environment.current);

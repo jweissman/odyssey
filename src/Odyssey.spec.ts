@@ -307,7 +307,7 @@ describe("Odyssey", () => {
     });
 
     it('defun with block', () => {
-      expect(odyssey.evaluate("add=(x,y)=>{x+y}")).toEqual('(x, y)=>{x+y}')
+      expect(odyssey.evaluate("add=(x,y)=>{c=x; c+y}")).toEqual('(x, y)=>{c=x,c+y}')
       expect(odyssey.evaluate("add 2,2")).toEqual('4')
     });
   });
@@ -316,6 +316,22 @@ describe("Odyssey", () => {
     it('prints', () => {
       expect(odyssey.evaluate('print(1, 3>2)')).toEqual('True')
     });
+
+    it('asserts', () => {
+      expect(odyssey.evaluate('assert(2+2 == 4)')).toEqual('True');
+      expect(() => odyssey.evaluate('assert(2+2>4)')).toThrow();
+    });
+  });
+
+  describe('stdlib', () => {
+    it.skip('specs', () => {
+      //expect(
+        //odyssey.evaluate('using odyssey/expect')
+        //odyssey.evaluate('expect(2+2).eql(3)')
+      //)
+    });
+    test.todo('http');
+    // Http.server () => "hello world"
   });
 
   test.todo('modules');
